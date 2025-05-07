@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const db = require("../db")
+const db = require("../db");
 
 const Book = db.sequelize.define(
   "Book",
@@ -11,9 +11,15 @@ const Book = db.sequelize.define(
     description: {
       type: DataTypes.STRING,
     },
-    length: {
+    author: {
+      type: DataTypes.STRING,
+    },
+    publication_year: {
       type: DataTypes.INTEGER,
     },
+    stock: {
+      type: DataTypes.INTEGER,
+    }
   },
   {}
 );
