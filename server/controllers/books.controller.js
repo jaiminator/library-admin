@@ -2,7 +2,7 @@ const Book = require("../models/Book");
 const Loan = require("../models/Loan");
 
 const getBooks = (req, res) => {
-    res.send("Test");
+    res.send("Test list books");
 }
 
 const createBook = async (req, res) => {
@@ -11,8 +11,9 @@ const createBook = async (req, res) => {
         description: "Hola",
         author: "anonymous",
         publication_year: 1965,
-        stock: 7});
-    res.send(createdBook.id);
+        stock: 7
+    });
+    res.send(`Book ${createdMember.id} created`);
 }
 
 exports.getBooks = getBooks;

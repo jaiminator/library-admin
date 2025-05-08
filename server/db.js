@@ -1,5 +1,6 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize } = require("sequelize"); //import module Sequelize
 
+// Connect to database with Sequelize
 const sequelize = new Sequelize("libraryadmin", "root", "root", {
     host: "localhost",
     dialect: "mysql",
@@ -7,6 +8,7 @@ const sequelize = new Sequelize("libraryadmin", "root", "root", {
 
 const db = {};
 
+// Add Sequelize to object 'db'
 db.sequelize = sequelize;
 
-module.exports = db;
+module.exports = db;    //export module 'db' used to create models
