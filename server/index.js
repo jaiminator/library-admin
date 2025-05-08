@@ -5,6 +5,7 @@ const express = require("express");
 const db = require("./db");
 const booksRouter = require("./routes/books.routes");
 const membersRouter = require("./routes/members.routes");
+const loansRouter = require("./routes/loans.routes");
 
 const main = () => {
   const app = express();
@@ -17,6 +18,7 @@ const main = () => {
 
   app.use("/books", booksRouter);
   app.use("/members", membersRouter);
+  app.use("/loans", loansRouter);
 
   app.listen(port, () => {
     console.log(`App listening on ${port}`);

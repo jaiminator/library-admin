@@ -1,5 +1,4 @@
 const Book = require("../models/Book");
-const Loan = require("../models/Loan");
 
 const getBooks = (req, res) => {
     res.send("Test list books");
@@ -13,7 +12,7 @@ const createBook = async (req, res) => {
         publication_year: 1965,
         stock: 7
     });
-    res.send(`Book ${createdMember.id} created`);
+    res.send(`Book ${createdBook.id} created`);
 }
 
 exports.getBooks = getBooks;

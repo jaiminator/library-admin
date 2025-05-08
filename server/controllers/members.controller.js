@@ -1,13 +1,23 @@
-const { DATE } = require("sequelize");
 const Member = require("../models/Member");
 
 const createMember = async (req, res) => {
-    const memberName = req.body.name;
-    const createdMember = await Member.create({
-        name: memberName,
-        registration_date: new Date()
-    });
-    res.status(201).send(createdMember.id);
+    try {
+        const memberName = req.body.name;
+        if (!memberName) {
+            res.status(400).send("Please enter a name of member");
+            console.log("Error. Member no created");
+        } else {
+            const createdMember = await Member.create({
+                name: memberName,
+                registration_date: new Date()
+            });
+            res.status(201).send({id: createdMember.id});
+            console.log('Member created');
+        }
+    } catch (error) {
+        res.status(500).send("Internal server error", error);
+        console.log(error);
+    }   
 }
 
 exports.createMember = createMember;
