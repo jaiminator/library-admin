@@ -1,5 +1,5 @@
 const LOAN_DAYS = 30;
-const { now } = require("sequelize/lib/utils");
+const { Op } = require("sequelize");
 const Loan = require("../models/Loan");
 const Book = require("../models/Book");
 const Member = require("../models/Member");
@@ -15,8 +15,8 @@ const loanBookToMember = async (req, res) => {
             return;
         }
 
-        const foundmember = await Member.findByPk(memberId);
-        if(!foundmember) {
+        const foundMember = await Member.findByPk(memberId);
+        if(!foundMember) {
             res.status(404).send("Member not found");
             return;
         }
@@ -38,6 +38,7 @@ const loanBookToMember = async (req, res) => {
         console.log(error);
     }   
 }
+
 const returnBook = async (req, res) => {
     try {
         const bookId = req.body.bookId;
@@ -50,7 +51,7 @@ const returnBook = async (req, res) => {
 
         const currentDate = new Date();
 
-        const returnedLoan = await Loan.update(
+        const updatedLoans = await Loan.update(
             { returnDate: currentDate },
             {
                 where: {
@@ -60,17 +61,59 @@ const returnBook = async (req, res) => {
             }
         );
 
-        //IMPLEMENT LOAN STATUS
+        res.status(200).send({canceledLoans: updatedLoans[0]})
+        
+    } catch (error) {
+        res.status(500).send("Internal server error", error);
+        console.log(error);
+    }   
+}
 
-        /* if(currentDate > returnedLoan.deadline) {
-            res.status(200).send({status: "ontime"});
-            return;
-        } else if (currentDate < returnedLoan.deadline) {
-            res.status(200).send({status: "delayed"});
-            return;
-        } */
-            
-        console.log('Loan updated');
+const getLoans = async (req, res) => {
+    try {
+        const memberId = req.query.memberId;
+        const activeLoans = req.query.activeLoans;
+
+        //CREAMOS LOS FILTROS DE LA API getLoans
+        const whereFilter = {};
+
+        if (memberId) {
+            whereFilter.memberId = memberId;
+        }
+        if (activeLoans === "true") {
+            whereFilter.returnDate = null;
+        }
+        if (activeLoans === "false") {
+            whereFilter.returnDate = {
+                [Op.not]: null
+            }
+        }
+        //
+
+        const loans = await Loan.findAll(
+            {
+                where: whereFilter,
+                include: [
+                    { model: Book, attributes: ['title'] }, 
+                    { model: Member, attributes: ['name']}
+                ]
+            }
+        );
+    
+        const parsedLoans = loans.map((loan) => {
+            return {
+                returnDate: loan.returnDate,
+                loanDate: loan.loanDate,
+                deadline: loan.deadline,
+                bookId: loan?.BookId,
+                memberId: loan?.MemberId,
+                bookTitle: loan?.Book?.title,
+                memberName: loan?.Member?.name
+            }
+        })
+
+        console.log(whereFilter);
+        res.status(200).send(parsedLoans);
         
     } catch (error) {
         res.status(500).send("Internal server error", error);
@@ -80,3 +123,4 @@ const returnBook = async (req, res) => {
 
 exports.loanBookToMember = loanBookToMember;
 exports.returnBook = returnBook;
+exports.getLoans = getLoans;

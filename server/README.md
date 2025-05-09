@@ -39,14 +39,14 @@ REQUEST
 }
 RESPONSE 
 {
-    status: 'ontime' | 'delayed' #TBD
+    canceledLoans: int
 }
 ```
 
-### Use case: Listar los préstamos de un socio
+### Use case: Listar los préstamos y filtrar por socio
 
 ```
-GET /loan?memberId=member_id
+GET /loan?memberId=memberId&activeLoans=boolean
 REQUEST 
 {
     
