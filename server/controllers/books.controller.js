@@ -1,7 +1,8 @@
 const Book = require("../models/Book");
 
-const getBooks = (req, res) => {
-    res.send("Test list books");
+const getBooks = async (req, res) => {
+    const books = await Book.findAll();
+    res.status(200).send(books);
 }
 
 const createBook = async (req, res) => {

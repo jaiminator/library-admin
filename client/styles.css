@@ -1,0 +1,22 @@
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+#menu {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+span{
+    padding: 10px;
+    background-color: beige;
+    border: 2px solid black;
+}
+span:hover{
+    cursor: pointer;
+}
+.hide{
+    display: none;
+}
