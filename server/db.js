@@ -4,6 +4,7 @@ const { Sequelize } = require("sequelize"); //import module Sequelize
 const sequelize = new Sequelize("libraryadmin", "root", "root", {
     host: "localhost",
     dialect: "mysql",
+    logging: false
 });
 
 const db = {};

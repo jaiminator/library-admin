@@ -1,22 +1,29 @@
 const Member = require("../models/Member");
+const bcryptjs = require("bcryptjs");
 
 const login = async (req, res) => {
     try {
-        const memberName = req.body.username;
+        const username = req.body.username;
         const password = req.body.password;
-        if (password != "El.Gol.De.Iniest@.2010") {
-            res.status(400).send("INCORRECT_PASSWORD");
-        }
-        const createdMember = await Member.findOne(
+
+        //Busca y comprueba si existe el usuario introducido en el body
+        const user = await Member.findOne(
             {where: {
-                name: memberName
+                user: username
             }});
             
-            if (!createdMember) {
-                res.status(404).send("INCORRECT_USERNAME");
-            }
-        res.status(201).send({llave: createdMember.id});
-        console.log('Member created');
+        if (!user) {
+            res.status(400).send("INCORRECT_USER_OR PASSWORD");
+        }
+
+        //Compara y comprueba mediante hash, la contraseña del usuario introducido
+        const isPasswordMatch = bcryptjs.compareSync(password, user.password);
+        if (!isPasswordMatch) {
+            res.status(400).send("INCORRECT_USER_OR PASSWORD");
+        }
+            
+        res.status(201).send({llave: user.id});
+        console.log('Member logged');
         
     } catch (error) {
         res.status(500).send("Internal server error", error);
@@ -24,7 +31,7 @@ const login = async (req, res) => {
     }   
 }
 
-const createMember = async (req, res) => {
+/* const createMember = async (req, res) => {
     try {
         const memberName = req.body.name;
         if (!memberName) {
@@ -42,7 +49,32 @@ const createMember = async (req, res) => {
         res.status(500).send("Internal server error", error);
         console.log(error);
     }   
+} */
+
+const register = async (req, res) => {
+    try {
+        const memberName = req.body.name;
+        const username = req.body.username;
+        const password = req.body.password;
+
+        if (!memberName) {
+            res.status(400).send("Please enter a name of member");
+        } else {
+            const createdMember = await Member.create({
+                name: memberName,
+                registration_date: new Date(),
+                user: username,
+                password: bcryptjs.hashSync(password)
+            });
+            res.status(201).send({id: createdMember.id});
+            console.log('Member registed');
+        }
+    } catch (error) {
+        res.status(500).send("Internal server error", error);
+        console.log(error);
+    }   
 }
 
-exports.createMember = createMember;
+/* exports.createMember = createMember; */
 exports.login = login;
+exports.register = register;

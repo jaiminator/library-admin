@@ -11,6 +11,15 @@ const Member = db.sequelize.define(
     registration_date: {
       type: DataTypes.DATE,
       allowNull: false
+    },
+    user: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
     }
   },
   {}
