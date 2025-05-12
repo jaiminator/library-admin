@@ -71,6 +71,7 @@ const returnBook = async (req, res) => {
 
 const getLoans = async (req, res) => {
     try {
+        console.log(req.user);
         const memberId = req.query.memberId;
         const activeLoans = req.query.activeLoans;
 
