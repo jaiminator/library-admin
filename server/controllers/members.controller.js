@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const Member = require("../models/Member");
 const bcryptjs = require("bcryptjs");
 
@@ -57,6 +58,15 @@ const register = async (req, res) => {
         const username = req.body.username;
         const password = req.body.password;
 
+        /* const user = await Member.findOne({
+            where: {
+                user: username
+            }
+        })
+
+        if (user.user == username) {
+            res.status(400).send("Error. Duplicate user");
+        } else  */
         if (!memberName) {
             res.status(400).send("Please enter a name of member");
         } else {

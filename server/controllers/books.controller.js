@@ -6,14 +6,21 @@ const getBooks = async (req, res) => {
 }
 
 const createBook = async (req, res) => {
+    const title = req.body.title;
+    const description = req.body.description;
+    const author = req.body.author;
+    const publicationYear = req.body.publication_year;
+    const isbn = req.body.ISBN;
+
     const createdBook = await Book.create({
-        title: "Cinco semanas en globo",
-        description: "Hola",
-        author: "anonymous",
-        publication_year: 1965,
-        stock: 7
+        title: title,
+        description: description,
+        author: author,
+        publication_year: publicationYear,
+        ISBN: isbn
     });
-    res.send(`Book ${createdBook.id} created`);
+    res.status(201).send({id: createdBook.id});
+    console.log("Book created")
 }
 
 exports.getBooks = getBooks;
