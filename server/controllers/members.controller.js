@@ -32,49 +32,33 @@ const login = async (req, res) => {
     }   
 }
 
-/* const createMember = async (req, res) => {
+const createMember = async (req, res) => {
     try {
         const memberName = req.body.name;
-        if (!memberName) {
-            res.status(400).send("Please enter a name of member");
-            console.log("Error. Member no created");
-        } else {
-            const createdMember = await Member.create({
-                name: memberName,
-                registration_date: new Date()
-            });
-            res.status(201).send({id: createdMember.id});
-            console.log('Member created');
-        }
-    } catch (error) {
-        res.status(500).send("Internal server error", error);
-        console.log(error);
-    }   
-} */
+        const memberUser = req.body.username;
+        const memberPassword = req.body.password;
 
-const register = async (req, res) => {
-    try {
-        const memberName = req.body.name;
-        const username = req.body.username;
-        const password = req.body.password;
+        //Validar e impedir el registro si existe un usuario o no introducimos el usuario
 
-        /* const user = await Member.findOne({
+        const user = await Member.findOne({
             where: {
-                user: username
+                user: memberUser
             }
         })
 
-        if (user.user == username) {
+        if (user) {
             res.status(400).send("Error. Duplicate user");
-        } else  */
+        } else 
+
         if (!memberName) {
             res.status(400).send("Please enter a name of member");
         } else {
+            //Creamos y registramos el usuario con la contraseña HASHEADA
             const createdMember = await Member.create({
                 name: memberName,
                 registration_date: new Date(),
-                user: username,
-                password: bcryptjs.hashSync(password)
+                user: memberUser,
+                password: bcryptjs.hashSync(memberPassword)
             });
             res.status(201).send({id: createdMember.id});
             console.log('Member registed');
@@ -85,6 +69,5 @@ const register = async (req, res) => {
     }   
 }
 
-/* exports.createMember = createMember; */
+exports.createMember = createMember;
 exports.login = login;
-exports.register = register;
