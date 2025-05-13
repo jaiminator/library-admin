@@ -3,6 +3,10 @@ const BASE_URL = "http://localhost:8000";
 
 const booksContainer = document.getElementById("booksContainer");
 const btnGetBooks = document.getElementById("btnGetBooks");
+
+const membersContainer = document.getElementById("membersContainer");
+const btnGetMembers = document.getElementById("btnGetMembers");
+
 const btnCreateMember = document.getElementById("btnCreateMember");
 
 const inputName = document.getElementById("inputName");
@@ -25,8 +29,7 @@ const getBooks = () => {
       ${ISBN}
       </p>`;
     });
-    
-  })
+  });
 }
 
 const newMember = () => {
@@ -55,5 +58,26 @@ const newMember = () => {
   });
 };
 
+const getMembers = () => {
+  fetch(BASE_URL + "/members")
+  .then((res) => res.json())
+  .then((data) => {
+    membersContainer.innerHTML = "";
+    data.forEach(member => {
+      const {id, name, registration_date, createdAt, updatedAt, user, password} = member;
+      membersContainer.innerHTML += `<p>
+      ${id}
+      ${name}
+      ${registration_date}
+      ${createdAt}
+      ${updatedAt}
+      ${user}
+      ${password}
+      </p>`;
+    });
+  });
+}
+
 btnGetBooks.addEventListener("click", getBooks);
+btnGetMembers.addEventListener("click", getMembers);
 btnCreateMember.addEventListener("click", newMember);

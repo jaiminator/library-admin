@@ -10,7 +10,7 @@ const Member = db.sequelize.define(
     },
     registration_date: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
     },
     user: {
       type: DataTypes.STRING,
@@ -20,6 +20,9 @@ const Member = db.sequelize.define(
     password: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    token: {
+      type: DataTypes.STRING,
     }
   },
   {}

@@ -1,6 +1,13 @@
-const { where } = require("sequelize");
 const Member = require("../models/Member");
 const bcryptjs = require("bcryptjs");
+
+const jwt = require("jsonwebtoken");
+const { jwt_secret } = require("../config/config.json") ["development"];
+
+const getMembers = async (req, res) => {
+    const users = await Member.findAll();
+    res.status(200).send(users);
+}
 
 const login = async (req, res) => {
     try {
@@ -22,8 +29,10 @@ const login = async (req, res) => {
         if (!isPasswordMatch) {
             res.status(400).send("INCORRECT_USER_OR PASSWORD");
         }
-            
-        res.status(201).send({llave: user.id});
+
+        let token = jwt.sign({ userId: user.id }, jwt_secret);
+
+        res.status(201).send({token: token});
         console.log('Member logged');
         
     } catch (error) {
@@ -33,41 +42,44 @@ const login = async (req, res) => {
 }
 
 const createMember = async (req, res) => {
+    const memberName = req.body.name;
+    const memberUsername = req.body.username;
+    const memberPassword = req.body.password;
+    
+    //Validar e impedir el registro si existe un usuario o no introducimos el usuario
+    
     try {
-        const memberName = req.body.name;
-        const memberUser = req.body.username;
-        const memberPassword = req.body.password;
-
-        //Validar e impedir el registro si existe un usuario o no introducimos el usuario
-
-        const user = await Member.findOne({
+        const existingUser = await Member.findOne({
             where: {
-                user: memberUser
+                user: memberUsername
             }
         })
 
-        if (user) {
-            res.status(400).send("Error. Duplicate user");
+        if (existingUser) {
+            res.status(400).send("User already");
+            return;
         } else 
 
-        if (!memberName) {
-            res.status(400).send("Please enter a name of member");
-        } else {
+        if (!memberName || !memberUsername || !memberPassword) {
+            res.status(400).send("Please enter member name, username & password");
+            return;
+        }
             //Creamos y registramos el usuario con la contraseña HASHEADA
             const createdMember = await Member.create({
                 name: memberName,
                 registration_date: new Date(),
-                user: memberUser,
+                user: memberUsername,
                 password: bcryptjs.hashSync(memberPassword)
             });
             res.status(201).send({id: createdMember.id});
             console.log('Member registed');
-        }
+        
     } catch (error) {
-        res.status(500).send("Internal server error", error);
+        res.status(500).send("Unexpected register error", error);
         console.log(error);
     }   
 }
 
-exports.createMember = createMember;
+exports.getMembers = getMembers;
 exports.login = login;
+exports.createMember = createMember;
