@@ -16,7 +16,7 @@ const authMiddleware = async (req,res,next) => {
     console.log(payload);
 
     //User id decodificado del token
-    const userId = payload.id;
+    const userId = payload.userId;
 
     //Obtengo el objeto usuario a partir del id (SELECT)
     const user = await Member.findByPk(userId);
