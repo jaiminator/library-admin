@@ -2,6 +2,8 @@ const port = 8000;
 
 const cors = require("cors");
 const express = require("express");
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger-output.json');
 const db = require("./db");
 const booksRouter = require("./routes/books.routes");
 const membersRouter = require("./routes/members.routes");
@@ -22,6 +24,7 @@ const main = () => {
   app.use("/members", membersRouter);
   app.use("/loans", authMiddleware, loansRouter);
   app.use("/users", userRouter);
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
   app.listen(port, () => {
     console.log(`App listening on ${port}`);
